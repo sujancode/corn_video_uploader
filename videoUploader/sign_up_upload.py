@@ -7,7 +7,7 @@ from string import ascii_letters
 import random
 from dependency.faker.Faker import getFakerInstance
 from dependency.database.index import getDatabaseWrapperInstance
-
+from dependency.captchaResolver.index import getTextToSpeechCaptchaResolver
 def getRandomString(length):
     return ''.join(random.choice(ascii_letters+"1234567890") for i in range(length))
 
@@ -29,8 +29,17 @@ def get_random_user_cred():
 
 def upload(browser,url,video_url,title):
     try:
+
         browser.get(f"{url}/users/upload")
+        captcha_solver=getTextToSpeechCaptchaResolver(browser)
+        sleep(2)
+        googleClass=browser.find_element(By.CSS_SELECTOR,"[title=reCAPTCHA]")
+        if googleClass:
+            captcha_solver.resolve()
+            sleep(2)
+            browser.switch_to.parent_frame()   
         browser.execute_script('upload_show_url()')
+
         sleep(4)
         browser.find_element(By.CSS_SELECTOR,".url_upload input").send_keys(video_url)
         sleep(2)
@@ -55,7 +64,7 @@ def upload(browser,url,video_url,title):
             element.send_keys(Keys.ENTER)
         browser.execute_script('''items=document.querySelectorAll("#category_list label");for(var item of items){item.click()};''')
         browser.execute_script('''document.querySelector("#upload_form_button").click()''')
-
+        print("UPLOADD Complete")
     except Exception as e:
         print(e)
 
@@ -66,7 +75,7 @@ def sign_up(video_url,title):
     url="https://spankbang.com"
     browser=getSeleniumBrowserAutomation()
     browser.get(url)
-    
+    sleep(2)
     browser.find_element(By.CLASS_NAME,"bt_signup").click()
     [username,email,password]=get_random_user_cred()
     print(username,email,password)

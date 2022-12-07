@@ -22,6 +22,7 @@ def get_dimension(width,height):
 
 def create_video(video_path,overlay_path,output_path):
     video = VideoFileClip(video_path)
+    
     [width,height]=video.size
     [width,height]=get_dimension(width,height)
 
@@ -31,9 +32,13 @@ def create_video(video_path,overlay_path,output_path):
     clip1=video.subclip(start,end)
     clip=clip1.without_audio()
 
+    if video.duration > 60*6:
+        video=video.subclip(0,60*6)
     home=CompositeVideoClip([clip,overlay])
+
     result=concatenate_videoclips([home,video])
-    result.write_videofile(output_path)
+    result.resize(height=480)
+    result.write_videofile(output_path,fps=24,preset="ultrafast",threads=5,)
 
 def main(mp4Path):
     filename=mp4Path.split("/")[-1]
