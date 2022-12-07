@@ -37,7 +37,7 @@ def create_video(video_path,overlay_path,output_path):
     home=CompositeVideoClip([clip,overlay])
 
     result=concatenate_videoclips([home,video])
-    result.resize(height=480)
+    # result.resize(height=480)
     result.write_videofile(output_path,fps=24,preset="ultrafast",threads=5,)
 
 def main(mp4Path):

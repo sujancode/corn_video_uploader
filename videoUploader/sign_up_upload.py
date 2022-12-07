@@ -15,7 +15,7 @@ def getRandomEmail():
     faker=getFakerInstance()
     name=faker.name()
     name=name.replace(" ","")
-    random_string=getRandomString(5)
+    random_string=getRandomString(10)
     return f"{name}{random_string}@gmail.com"
 
 def getRandomPassword():
@@ -33,8 +33,8 @@ def upload(browser,url,video_url,title):
         browser.get(f"{url}/users/upload")
         captcha_solver=getTextToSpeechCaptchaResolver(browser)
         sleep(2)
-        googleClass=browser.find_element(By.CSS_SELECTOR,"[title=reCAPTCHA]")
-        if googleClass:
+        googleClass=browser.find_elements(By.CSS_SELECTOR,"[title=reCAPTCHA]")
+        if len(googleClass)>0:
             captcha_solver.resolve()
             sleep(2)
             browser.switch_to.parent_frame()   
