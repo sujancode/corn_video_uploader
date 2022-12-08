@@ -56,7 +56,7 @@ def getSeleniumBrowserAutomation():
     print(driver.session_id)
 
 
-    return INSTANCE
+    return driver
 
 
 
