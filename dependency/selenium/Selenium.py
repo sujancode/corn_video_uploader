@@ -1,4 +1,4 @@
-from seleniumwire.undetected_chromedriver import webdriver
+from seleniumwire import webdriver
 from selenium.webdriver.chrome.options import Options as ChromeOptions
 import random
 
@@ -59,7 +59,7 @@ def getSeleniumBrowserAutomation():
 
         # chrome_options.add_argument(f"--load-extension={proxy_extension.directory}")
 
-        driver = webdriver.Chrome(options=chrome_options,executable_path='/opt/chromedriver/chromedriver',version_main=105)
+        driver = webdriver.Chrome(options=chrome_options,executable_path='/opt/chromedriver/chromedriver')
 
         print(driver.session_id)
 
