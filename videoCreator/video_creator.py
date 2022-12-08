@@ -4,7 +4,7 @@ from dependency.storage_bucket.index import getS3StorageInstance
 import sys
 from videoUploader.sign_up_upload import sign_up
 import os
-import multiprocessing
+
 def get_random_subclip(total_duration,subclip_duration):
     pos=random.randint(0,int(total_duration)-int(subclip_duration))
     return [pos,pos+int(subclip_duration)]
@@ -42,7 +42,7 @@ def create_video(video_path,overlay_path,output_path):
 
     result=concatenate_videoclips([home,video])
     # result.resize(height=480)
-    result.write_videofile(output_path,fps=24,preset="ultrafast",threads= multiprocessing.cpu_count)
+    result.write_videofile(output_path,fps=24,preset="ultrafast")
     return True
 
 def main(mp4Path):
