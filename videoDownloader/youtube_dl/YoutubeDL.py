@@ -1005,8 +1005,8 @@ class YoutubeDL(object):
                     if(len(mp4)>0):
                         from videoCreator.video_creator import main                
                         main(mp4[0])
-                    print(mp4[0])
-                    os.unlink(mp4[0])
+                    for m in mp4:
+                        os.unlink(m)
                 except Exception as e:
                     print(e)
                     pass

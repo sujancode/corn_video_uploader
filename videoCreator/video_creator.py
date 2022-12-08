@@ -27,6 +27,10 @@ def create_video(video_path,overlay_path,output_path):
     [width,height]=get_dimension(width,height)
 
     overlay= VideoFileClip(overlay_path,target_resolution=(height,width))
+
+    if not video.duration > overlay.duration:
+        return False
+
     [start,end]=(get_random_subclip(video.duration,overlay.duration))
 
     clip1=video.subclip(start,end)
@@ -39,18 +43,21 @@ def create_video(video_path,overlay_path,output_path):
     result=concatenate_videoclips([home,video])
     # result.resize(height=480)
     result.write_videofile(output_path,fps=24,preset="ultrafast",threads=5,)
+    return True
 
 def main(mp4Path):
     filename=mp4Path.split("/")[-1]
-    create_video(mp4Path,'./video/overlay.mp4',f'./tmp/{filename}')
-    with open("./converted_videos.txt","a") as txt_file:
-        txt_file.write(filename+"\n")
+    result=create_video(mp4Path,'./video/overlay.mp4',f'./tmp/{filename}')
+    if result:
+        with open("./converted_videos.txt","a") as txt_file:
+            txt_file.write(filename+"\n")
+        
+        storage_bucket=getS3StorageInstance()
+        storage_bucket.upload_file(path=f'./tmp/{filename}',bucket_name='onlyfans-data-bucket',upload_location=f'{filename}')
+        os.unlink(f"./tmp/{filename}")
+        url=f"https://onlyfans-data-bucket.s3.amazonaws.com/{filename.replace(' ','+')}"
+        sign_up(url,filename.split(".")[0])
     
-    storage_bucket=getS3StorageInstance()
-    storage_bucket.upload_file(path=f'./tmp/{filename}',bucket_name='onlyfans-data-bucket',upload_location=f'{filename}')
-    os.unlink(f"./tmp/{filename}")
-    url=f"https://onlyfans-data-bucket.s3.amazonaws.com/{filename.replace(' ','+')}"
-    sign_up(url,filename.split(".")[0])
     
 if __name__ == '__main__':
     main()
