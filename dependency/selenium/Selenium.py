@@ -6,8 +6,6 @@ import os
 import shutil
 import tempfile
 
-INSTANCE=None
-
 
 def get_proxies():
     ips=[    
@@ -25,45 +23,38 @@ def get_proxies():
     return (ip, 12323, "14a49f98146a6", "360a6e122f")
 
 def getSeleniumBrowserAutomation():
+    chrome_options = ChromeOptions()
+    # chrome_options.add_argument("start-maximized")
+    
+    # chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
+    # chrome_options.add_experimental_option('useAutomationExtension', False)
 
-    global INSTANCE
+    
+    chrome_options.add_argument('--headless')
+    chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_argument("--disable-dev-shm-usage")
+    chrome_options.add_argument("--disable-gpu")
+    chrome_options.add_argument("--disable-dev-tools")
+    chrome_options.add_argument('--disable-gpu-sandbox')
+    chrome_options.add_argument('--ignore-certificate-errors-spki-list')
+    chrome_options.add_argument('--ignore-ssl-errors')
 
-    if not INSTANCE:
-
-
-        chrome_options = ChromeOptions()
-        # chrome_options.add_argument("start-maximized")
-        
-        # chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
-        # chrome_options.add_experimental_option('useAutomationExtension', False)
-
-        
-        chrome_options.add_argument('--headless')
-        chrome_options.add_argument("--no-sandbox")
-        chrome_options.add_argument("--disable-dev-shm-usage")
-        chrome_options.add_argument("--disable-gpu")
-        chrome_options.add_argument("--disable-dev-tools")
-        chrome_options.add_argument('--disable-gpu-sandbox')
-        chrome_options.add_argument('--ignore-certificate-errors-spki-list')
-        chrome_options.add_argument('--ignore-ssl-errors')
-
-        chrome_options.add_argument("--no-zygote")
-        chrome_options.add_argument("--single-process")
-        chrome_options.binary_location = '/opt/chromium/chrome'
-        
-        
+    chrome_options.add_argument("--no-zygote")
+    chrome_options.add_argument("--single-process")
+    chrome_options.binary_location = '/opt/chromium/chrome'
+    
+    
 
 
-        # proxy =  get_proxies()
-        # proxy_extension = ProxyExtension(*proxy)
+    # proxy =  get_proxies()
+    # proxy_extension = ProxyExtension(*proxy)
 
-        # chrome_options.add_argument(f"--load-extension={proxy_extension.directory}")
+    # chrome_options.add_argument(f"--load-extension={proxy_extension.directory}")
 
-        driver = webdriver.Chrome(options=chrome_options,executable_path='/opt/chromedriver/chromedriver')
+    driver = webdriver.Chrome(options=chrome_options,executable_path='/opt/chromedriver/chromedriver')
 
-        print(driver.session_id)
+    print(driver.session_id)
 
-        INSTANCE=driver
 
     return INSTANCE
 
