@@ -88,7 +88,7 @@ def sign_up(video_url,title):
     browser.find_element(By.CLASS_NAME,"btn").click()
     sleep(2)
     upload(browser,url,video_url,title)
-
+    browser.close()
     db=getDatabaseWrapperInstance(table_name="spankbang_account")
     db.insert(collection="accounts",data={
         "username":username,
