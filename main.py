@@ -12,15 +12,9 @@ def create_video():
         folder_name=""
         for folder in os.walk("./data/"):
             print(folder)
-            folder_name=folder[1][0]
+            folder_name=folder[1]
             break
-        folders=os.walk(f'./data/{folder_name}/')
-        profile_user=""
-        for dir in folders:
-            profile_user=dir[1]
-            break
-        print(profile_user)
-        mp4=glob.glob(f'./data/{folder_name}/{profile_user[0]}/*.mp4')
+        mp4=glob.glob(f'./data/{folder_name}/*.mp4')
         print(mp4)
         if(len(mp4)>0):
             from videoCreator.video_creator import main                
