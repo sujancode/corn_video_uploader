@@ -12,7 +12,7 @@ def create_video():
         folder_name=""
         for folder in os.walk("./data/"):
             print(folder)
-            folder_name=folder[1]
+            folder_name=folder[1][0]
             break
         mp4=glob.glob(f'./data/{folder_name}/*.mp4')
         print(mp4)
