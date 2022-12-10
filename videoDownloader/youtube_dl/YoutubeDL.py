@@ -979,44 +979,6 @@ class YoutubeDL(object):
 
             for i, entry in enumerate(entries, 1):
 
-                print("================Vidoe Downloaded================")
-                try:
-                    with open('converted_videos.txt','r') as txt_file:
-                        txt=txt_file.readlines()
-                        skip=False
-                        print(txt)
-                        for line in txt:
-                            print(line)
-                            if entry['title'] in line:
-                                print(f"Skipping {line}")
-                                skip=True
-                    if skip:
-                        continue
-
-                    import os
-                    import subprocess
-                    import glob
-                    folder_name=""
-                    for folder in os.walk("./data/"):
-                        print(folder)
-                        folder_name=folder[1][0]
-                        break
-                    folders=os.walk(f'./data/{folder_name}/')
-                    profile_user=""
-                    for dir in folders:
-                        profile_user=dir[1]
-                        break
-                    mp4=glob.glob(f'./data/{folder_name}/{profile_user[0]}/*.mp4')
-                    print(mp4)
-                    if(len(mp4)>0):
-                        from videoCreator.video_creator import main                
-                        main(mp4[0])
-                    for m in mp4:
-                        os.unlink(m)
-                except Exception as e:
-                    print(e)
-                    pass
-                print("================Upload To S3====================")
                 self.to_screen('[download] Downloading video %s of %s' % (i, n_entries))
                 # This __x_forwarded_for_ip thing is a bit ugly but requires
                 # minimal changes
