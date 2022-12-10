@@ -19,6 +19,7 @@ def create_video():
         for dir in folders:
             profile_user=dir[1]
             break
+        print(profile_user)
         mp4=glob.glob(f'./data/{folder_name}/{profile_user[0]}/*.mp4')
         print(mp4)
         if(len(mp4)>0):
