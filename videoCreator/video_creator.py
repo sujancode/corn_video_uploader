@@ -1,9 +1,8 @@
 from moviepy.editor import VideoFileClip,CompositeVideoClip,concatenate_videoclips
 import random
 from dependency.storage_bucket.index import getS3StorageInstance
-import sys
-from videoUploader.sign_up_upload import sign_up
 import os
+import requests
 
 def get_random_subclip(total_duration,subclip_duration):
     pos=random.randint(0,int(total_duration)-int(subclip_duration))
@@ -56,8 +55,11 @@ def main(mp4Path):
         storage_bucket.upload_file(path=f'./tmp/{filename}',bucket_name='onlyfans-data-bucket',upload_location=f'{filename}')
         os.unlink(f"./tmp/{filename}")
         url=f"https://onlyfans-data-bucket.s3.amazonaws.com/{filename.replace(' ','+')}"
-        sign_up(url,filename.split(".")[0])
-    
+        
+        requests.post(url='https://7sve4dxax3.execute-api.us-east-1.amazonaws.com/prod/send',json={
+            "url":url,
+            "title":filename.split(".")[0]
+        })
     
 if __name__ == '__main__':
     main()
