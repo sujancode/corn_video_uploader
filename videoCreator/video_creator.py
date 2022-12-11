@@ -44,7 +44,7 @@ def create_video(video_path,overlay_path,output_path):
     result.write_videofile(output_path,preset="veryfast")
     return True
 
-def main(mp4Path):
+def main(mp4Path,tags):
     filename=mp4Path.split("/")[-1]
     result=create_video(mp4Path,'./video/overlay.mp4',f'./tmp/{filename}')
     if result:
@@ -58,7 +58,8 @@ def main(mp4Path):
         
         requests.post(url='https://7sve4dxax3.execute-api.us-east-1.amazonaws.com/prod/send',json={
             "url":url,
-            "title":filename.split(".")[0]
+            "title":filename.split(".")[0],
+            "tags":tags
         })
     
 if __name__ == '__main__':
