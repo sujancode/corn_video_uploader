@@ -35,8 +35,8 @@ def create_video(video_path,overlay_path,output_path):
     clip1=video.subclip(start,end)
     clip=clip1.without_audio()
 
-    if video.duration > 60*6:
-        video=video.subclip(0,60*6)
+    if video.duration > 60*12:
+        video=video.subclip(0,60*12)
     home=CompositeVideoClip([clip,overlay])
 
     result=concatenate_videoclips([home,video])
@@ -55,7 +55,7 @@ def main(mp4Path,tags):
         storage_bucket.upload_file(path=f'./tmp/{filename}',bucket_name='onlyfans-data-bucket',upload_location=f'{filename}')
         os.unlink(f"./tmp/{filename}")
         url=f"https://onlyfans-data-bucket.s3.amazonaws.com/{filename.replace(' ','+')}"
-        
+    
         requests.post(url='https://7sve4dxax3.execute-api.us-east-1.amazonaws.com/prod/send',json={
             "url":url,
             "title":filename.split(".")[0],

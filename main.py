@@ -60,5 +60,7 @@ def main():
                     tags.remove('...')
             except Exception as e:
                 print(f"Error with url {e}")
-            create_video(tags)        
+            print(tags)
+            create_video(tags)    
+    
 main()
