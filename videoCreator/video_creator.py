@@ -1,8 +1,9 @@
-from moviepy.editor import VideoFileClip,CompositeVideoClip,concatenate_videoclips
+from moviepy.editor import VideoFileClip,CompositeVideoClip,concatenate_videoclips,ImageClip
 import random
 from dependency.storage_bucket.index import getS3StorageInstance
 import os
 import requests
+from moviepy.video.fx.resize import resize
 
 def get_random_subclip(total_duration,subclip_duration):
     pos=random.randint(0,int(total_duration)-int(subclip_duration))
@@ -13,19 +14,23 @@ def get_dimension(width,height):
     [overlay_width,overlay_height]=VideoFileClip('./video/overlay.mp4').size
     print(overlay_height,overlay_width)
     print(width)
+    return [ 1024,720]
     
     if (width/overlay_width)<=1.0:
         return [int(width),int(height)]
     else:
         return [int(width/4),int(height)]
+    
 
 def create_video(video_path,overlay_path,output_path):
-    video = VideoFileClip(video_path)
+    video = VideoFileClip(video_path,target_resolution=(720,1280))
     
-    [width,height]=video.size
-    [width,height]=get_dimension(width,height)
+    # [width,height]=video.size
+    # [width,height]=get_dimension(width,height)
 
-    overlay= VideoFileClip(overlay_path,target_resolution=(height,width))
+    overlay= VideoFileClip(overlay_path,has_mask=True,target_resolution=(720,int(1280/4)))
+    overlay=overlay.set_position(("right", "top"))
+
 
     if not video.duration > overlay.duration:
         return False
@@ -35,10 +40,14 @@ def create_video(video_path,overlay_path,output_path):
     clip1=video.subclip(start,end)
     clip=clip1.without_audio()
 
-    if video.duration > 60*12:
-        video=video.subclip(0,60*12)
-    home=CompositeVideoClip([clip,overlay])
+    if video.duration > 60*7:
+        video=video.subclip(0,60*7)
 
+    title = ImageClip("./video/title.png",).set_start(0).set_duration(video.duration).set_pos((15,"bottom"))
+    title=title.resize(0.4)
+
+    home=CompositeVideoClip([clip,overlay,title])
+    video=CompositeVideoClip([video,title])
     result=concatenate_videoclips([home,video])
     # result.resize(height=480)
     result.write_videofile(output_path,preset="veryfast")
