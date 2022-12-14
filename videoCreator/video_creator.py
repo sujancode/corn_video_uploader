@@ -43,10 +43,13 @@ def create_video(video_path,overlay_path,output_path):
     if video.duration > 60*7:
         video=video.subclip(0,60*7)
 
-    title = ImageClip("./video/title.png",).set_start(0).set_duration(video.duration).set_pos((15,"bottom"))
-    title=title.resize(0.4)
+    overlay_title = ImageClip("./video/title.png",).set_start(0).set_duration(overlay.duration).set_pos((15,"bottom"))
+    overlay_title=overlay_title.resize(0.4)
+    
+    title = ImageClip("./video/title.png",).set_start(0).set_duration(overlay.duration).set_pos((15,"bottom"))
+    title=overlay_title.resize(0.4)
 
-    home=CompositeVideoClip([clip,overlay,title])
+    home=CompositeVideoClip([clip,overlay,overlay_title])
     video=CompositeVideoClip([video,title])
     result=concatenate_videoclips([home,video])
     # result.resize(height=480)
