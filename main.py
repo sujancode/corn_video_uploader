@@ -96,7 +96,7 @@ def pornhub_scrapper(html):
 def main():
     url=sys.argv[1]
     for index in range(1,1000):
-        url+="&page="+index
+        url+="&page="+str(index)
         print(url)
         res=requests.get(url=url)
         html=str(res.text)
