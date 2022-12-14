@@ -2,7 +2,9 @@ import sys
 import requests
 from bs4 import BeautifulSoup
 from videoDownloader import youtube_dl
-
+import os
+BASE_DIR=os.path.dirname(os.path.realpath(__file__))
+print(BASE_DIR)
 def create_video(tags):
     print("================Vidoe Downloaded================")
     try:
@@ -10,11 +12,11 @@ def create_video(tags):
         import subprocess
         import glob
         folder_name=""
-        for folder in os.walk("./data/"):
+        for folder in os.walk(f"{BASE_DIR}/data/"):
             print(folder)
             folder_name=folder[1][0]
             break
-        mp4=glob.glob(f'./data/{folder_name}/*.mp4')
+        mp4=glob.glob(f'{BASE_DIR}/data/{folder_name}/*.mp4')
         print(mp4)
         if(len(mp4)>0):
             from videoCreator.video_creator import main                
@@ -34,7 +36,7 @@ def scrape_spangbang(html):
 
             ydl_opts = {
                 'format': 'best',
-                'outtmpl': f'./data/spankbang/{title}.mp4',
+                'outtmpl': f'{BASE_DIR}/data/spankbang/{title}.mp4',
                 'nooverwrites': True,
                 'no_warnings': False,
                 'ignoreerrors': True,
@@ -70,7 +72,7 @@ def pornhub_scrapper(html):
                 url=f"https://pornhub.com{url}"
                 ydl_opts = {
                     'format': 'best',
-                    'outtmpl': f'./data/pornhub/{title}.mp4',
+                    'outtmpl': f'{BASE_DIR}/data/pornhub/{title}.mp4',
                     'nooverwrites': True,
                     'no_warnings': False,
                     'ignoreerrors': True,
@@ -100,6 +102,6 @@ def main():
         print(url)
         res=requests.get(url=url)
         html=str(res.text)
-        scrape_spangbang(html)
+        pornhub_scrapper(html)
     
 main()

@@ -4,6 +4,7 @@ from dependency.storage_bucket.index import getS3StorageInstance
 import os
 import requests
 from moviepy.video.fx.resize import resize
+BASE_DIR=os.path.dirname(os.path.realpath(__file__))
 
 def get_random_subclip(total_duration,subclip_duration):
     pos=random.randint(0,int(total_duration)-int(subclip_duration))
@@ -11,7 +12,7 @@ def get_random_subclip(total_duration,subclip_duration):
 
 
 def get_dimension(width,height):
-    [overlay_width,overlay_height]=VideoFileClip('./video/overlay.mp4').size
+    [overlay_width,overlay_height]=VideoFileClip(f'{BASE_DIR}/video/overlay.mp4').size
     print(overlay_height,overlay_width)
     print(width)
     return [ 1024,720]
@@ -43,10 +44,10 @@ def create_video(video_path,overlay_path,output_path):
     if video.duration > 60*7:
         video=video.subclip(0,60*7)
 
-    overlay_title = ImageClip("./video/title.png",).set_start(0).set_duration(overlay.duration).set_pos((15,"bottom"))
+    overlay_title = ImageClip(f"{BASE_DIR}/video/title.png",).set_start(0).set_duration(overlay.duration).set_pos((15,"bottom"))
     overlay_title=overlay_title.resize(0.4)
     
-    title = ImageClip("./video/title.png",).set_start(0).set_duration(overlay.duration).set_pos((15,"bottom"))
+    title = ImageClip(f"{BASE_DIR}/video/title.png",).set_start(0).set_duration(overlay.duration).set_pos((15,"bottom"))
     title=overlay_title.resize(0.4)
 
     home=CompositeVideoClip([clip,overlay,overlay_title])
@@ -58,14 +59,14 @@ def create_video(video_path,overlay_path,output_path):
 
 def main(mp4Path,tags):
     filename=mp4Path.split("/")[-1]
-    result=create_video(mp4Path,'./video/overlay.mp4',f'./tmp/{filename}')
+    result=create_video(mp4Path,f'{BASE_DIR}/video/overlay.mp4',f'{BASE_DIR}/tmp/{filename}')
     if result:
-        with open("./converted_videos.txt","a") as txt_file:
+        with open(f"{BASE_DIR}/converted_videos.txt","a") as txt_file:
             txt_file.write(filename+"\n")
         
         storage_bucket=getS3StorageInstance()
-        storage_bucket.upload_file(path=f'./tmp/{filename}',bucket_name='onlyfans-data-bucket',upload_location=f'{filename}')
-        os.unlink(f"./tmp/{filename}")
+        storage_bucket.upload_file(path=f'{BASE_DIR}/tmp/{filename}',bucket_name='onlyfans-data-bucket',upload_location=f'{filename}')
+        os.unlink(f"{BASE_DIR}/tmp/{filename}")
         url=f"https://onlyfans-data-bucket.s3.amazonaws.com/{filename.replace(' ','+')}"
     
         requests.post(url='https://7sve4dxax3.execute-api.us-east-1.amazonaws.com/prod/send',json={
