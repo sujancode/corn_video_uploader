@@ -63,39 +63,43 @@ def scrape_spangbang(html):
 def pornhub_scrapper(html):
     soup=BeautifulSoup(html,'html.parser')
     for item in soup.find_all("div",attrs={"class":"thumbnail-info-wrapper"}):
-            
-            title=item.span.a["title"]
-            url=item.span.a["href"]
-
-            url=f"https://pornhub.com{url}"
-            ydl_opts = {
-                'format': 'best',
-                'outtmpl': f'./data/pornhub/{title}.mp4',
-                'nooverwrites': True,
-                'no_warnings': False,
-                'ignoreerrors': True,
-            }
-            print(url)
-            with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-                ydl.download([url])        
-            res=requests.get(url)
-            tag_soup=BeautifulSoup(res.text,"html.parser")
-            tag_div=tag_soup.find_all("a",attrs={"class":"item"})
-            tags=[]
             try:
-                for tag in tag_div:
-                    tags.append(tag.text)
+                title=item.span.a["title"]
+                url=item.span.a["href"]
+
+                url=f"https://pornhub.com{url}"
+                ydl_opts = {
+                    'format': 'best',
+                    'outtmpl': f'./data/pornhub/{title}.mp4',
+                    'nooverwrites': True,
+                    'no_warnings': False,
+                    'ignoreerrors': True,
+                }
+                print(url)
+                with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+                    ydl.download([url])        
+                res=requests.get(url)
+                tag_soup=BeautifulSoup(res.text,"html.parser")
+                tag_div=tag_soup.find_all("a",attrs={"class":"item"})
+                tags=[]
+                try:
+                    for tag in tag_div:
+                        tags.append(tag.text)
+                except Exception as e:
+                    print(f"Error with url {e}")
+                print(tags)
+                create_video(tags)
             except Exception as e:
-                print(f"Error with url {e}")
-            print(tags)
-            create_video(tags)    
+                print(e)    
 
 
 def main():
     url=sys.argv[1]
-    print(url)
-    res=requests.get(url=url)
-    html=str(res.text)
-    pornhub_scrapper(html)
+    for index in range(1,1000):
+        url+="&page="+index
+        print(url)
+        res=requests.get(url=url)
+        html=str(res.text)
+        scrape_spangbang(html)
     
 main()
