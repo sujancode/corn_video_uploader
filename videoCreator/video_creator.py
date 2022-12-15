@@ -47,7 +47,7 @@ def create_video(video_path,overlay_path,output_path):
     overlay_title = ImageClip(f"{BASE_DIR}/video/title.png",).set_start(0).set_duration(overlay.duration).set_pos((15,"bottom"))
     overlay_title=overlay_title.resize(0.4)
     
-    title = ImageClip(f"{BASE_DIR}/video/title.png",).set_start(0).set_duration(overlay.duration).set_pos((15,"bottom"))
+    title = ImageClip(f"{BASE_DIR}/video/title.png",).set_start(0).set_duration(video.duration).set_pos((15,"bottom"))
     title=overlay_title.resize(0.4)
 
     home=CompositeVideoClip([clip,overlay,overlay_title])
