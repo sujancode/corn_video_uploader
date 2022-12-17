@@ -68,7 +68,7 @@ def main(mp4Path,tags):
         
         storage_bucket=getS3StorageInstance()
         storage_bucket.upload_file(path=f'{BASE_DIR}/tmp/{filename}',bucket_name='onlyfans-data-bucket',upload_location=f'{filename}')
-        # os.unlink(f"{BASE_DIR}/tmp/{filename}")
+        os.unlink(f"{BASE_DIR}/tmp/{filename}")
         url=f"https://onlyfans-data-bucket.s3.amazonaws.com/{filename.replace(' ','+')}"
 
         db=getDatabaseWrapperInstance(table_name="created_video")
@@ -79,11 +79,11 @@ def main(mp4Path,tags):
             "tags":tags
         })
 
-        # requests.post(url='https://7sve4dxax3.execute-api.us-east-1.amazonaws.com/prod/send',json={
-        #     "url":url,
-        #     "title":filename.split(".")[0],
-        #     "tags":tags
-        # })
+        requests.post(url='https://7sve4dxax3.execute-api.us-east-1.amazonaws.com/prod/send',json={
+            "url":url,
+            "title":filename.split(".")[0],
+            "tags":tags
+        })
     
 if __name__ == '__main__':
     main()
