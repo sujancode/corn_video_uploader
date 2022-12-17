@@ -4,6 +4,7 @@ from dependency.storage_bucket.index import getS3StorageInstance
 import os
 import requests
 from dependency.database.index import getDatabaseWrapperInstance
+from sanitize_filename import sanitize
 
 BASE_DIR=os.path.dirname(os.path.realpath(__file__))
 
@@ -59,6 +60,7 @@ def create_video(video_path,overlay_path,output_path):
 
 def main(mp4Path,tags):
     filename=mp4Path.split("/")[-1]
+    filename=sanitize(filename)
     result=create_video(mp4Path,f'{BASE_DIR}/video/overlay.mp4',f'{BASE_DIR}/tmp/{filename}')
     if result:
         with open(f"{BASE_DIR}/converted_videos.txt","a") as txt_file:
