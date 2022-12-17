@@ -72,14 +72,16 @@ def main(mp4Path,tags):
         db=getDatabaseWrapperInstance(table_name="created_video")
         
         db.insert(collection="videos",data={
-            "url":url
-        })
-
-        requests.post(url='https://7sve4dxax3.execute-api.us-east-1.amazonaws.com/prod/send',json={
             "url":url,
             "title":filename.split(".")[0],
             "tags":tags
         })
+
+        # requests.post(url='https://7sve4dxax3.execute-api.us-east-1.amazonaws.com/prod/send',json={
+        #     "url":url,
+        #     "title":filename.split(".")[0],
+        #     "tags":tags
+        # })
     
 if __name__ == '__main__':
     main()
