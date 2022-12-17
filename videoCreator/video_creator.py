@@ -3,7 +3,8 @@ import random
 from dependency.storage_bucket.index import getS3StorageInstance
 import os
 import requests
-from moviepy.video.fx.resize import resize
+from dependency.database.index import getDatabaseWrapperInstance
+
 BASE_DIR=os.path.dirname(os.path.realpath(__file__))
 
 def get_random_subclip(total_duration,subclip_duration):
@@ -24,6 +25,7 @@ def get_dimension(width,height):
     
 
 def create_video(video_path,overlay_path,output_path):
+
     video = VideoFileClip(video_path,target_resolution=(720,1280))
     
     # [width,height]=video.size
@@ -44,16 +46,14 @@ def create_video(video_path,overlay_path,output_path):
     if video.duration > 60*7:
         video=video.subclip(0,60*7)
 
-    overlay_title = ImageClip(f"{BASE_DIR}/video/title.png",).set_start(0).set_duration(overlay.duration).set_pos((15,"bottom"))
+    home=CompositeVideoClip([clip,overlay])
+   
+    overlay_title = ImageClip(f"{BASE_DIR}/video/title.png",).set_start(0).set_duration(video.duration).set_pos((15,"bottom"))
     overlay_title=overlay_title.resize(0.4)
     
-    title = ImageClip(f"{BASE_DIR}/video/title.png",).set_start(0).set_duration(video.duration).set_pos((15,"bottom"))
-    title=overlay_title.resize(0.4)
-
-    home=CompositeVideoClip([clip,overlay,overlay_title])
-    video=CompositeVideoClip([video,title])
+    video=CompositeVideoClip([video,overlay_title])
     result=concatenate_videoclips([home,video])
-    # result.resize(height=480)
+
     result.write_videofile(output_path,preset="veryfast")
     return True
 
@@ -66,9 +66,15 @@ def main(mp4Path,tags):
         
         storage_bucket=getS3StorageInstance()
         storage_bucket.upload_file(path=f'{BASE_DIR}/tmp/{filename}',bucket_name='onlyfans-data-bucket',upload_location=f'{filename}')
-        os.unlink(f"{BASE_DIR}/tmp/{filename}")
+        # os.unlink(f"{BASE_DIR}/tmp/{filename}")
         url=f"https://onlyfans-data-bucket.s3.amazonaws.com/{filename.replace(' ','+')}"
-    
+
+        db=getDatabaseWrapperInstance(table_name="created_video")
+        
+        db.insert(collection="videos",data={
+            "url":url
+        })
+
         requests.post(url='https://7sve4dxax3.execute-api.us-east-1.amazonaws.com/prod/send',json={
             "url":url,
             "title":filename.split(".")[0],
