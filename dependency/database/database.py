@@ -15,7 +15,7 @@ class DatabaseWrapper:
     
     def find_all(self,collection,filter={}):
         collection=self.db[collection]
-        return [item for item in collection.find(filter)]
+        return  list(collection.find(filter))
     
     def get_distinct(self,collection,field_name):
         collection=self.db[collection]
