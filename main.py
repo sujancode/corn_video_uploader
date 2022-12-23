@@ -5,7 +5,7 @@ from videoDownloader import youtube_dl
 import os
 BASE_DIR=os.path.dirname(os.path.realpath(__file__))
 print(BASE_DIR)
-def create_video(tags):
+def create_video(tags,username):
     print("================Vidoe Downloaded================")
     try:
         import os
@@ -20,7 +20,7 @@ def create_video(tags):
         print(mp4)
         if(len(mp4)>0):
             from videoCreator.video_creator import main                
-            main(mp4[0],tags)
+            main(mp4[0],tags,username)
         for m in mp4:
             os.unlink(m)
     except Exception as e:
@@ -81,6 +81,8 @@ def pornhub_scrapper(html):
                 with youtube_dl.YoutubeDL(ydl_opts) as ydl:
                     ydl.download([url])        
                 res=requests.get(url)
+                username_soup=BeautifulSoup(res.text,"html.parser")
+                username=username_soup.select_one(".usernameBadgesWrapper a").text
                 tag_soup=BeautifulSoup(res.text,"html.parser")
                 tag_div=tag_soup.find_all("a",attrs={"class":"item"})
                 tags=[]
@@ -90,7 +92,7 @@ def pornhub_scrapper(html):
                 except Exception as e:
                     print(f"Error with url {e}")
                 print(tags)
-                create_video(tags)
+                create_video(tags,username)
             except Exception as e:
                 print(e)    
 
