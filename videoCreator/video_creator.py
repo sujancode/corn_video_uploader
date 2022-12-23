@@ -48,11 +48,7 @@ def create_video(video_path,overlay_path,output_path):
         video=video.subclip(0,60*7)
 
     home=CompositeVideoClip([clip,overlay])
-   
-    overlay_title = ImageClip(f"{BASE_DIR}/video/title.png",).set_start(0).set_duration(video.duration).set_pos((15,"bottom"))
-    overlay_title=overlay_title.resize(0.4)
-    
-    video=CompositeVideoClip([video,overlay_title])
+       
     result=concatenate_videoclips([home,video])
 
     result.write_videofile(output_path,preset="veryfast")
@@ -79,11 +75,11 @@ def main(mp4Path,tags):
             "tags":tags
         })
 
-        requests.post(url='https://7sve4dxax3.execute-api.us-east-1.amazonaws.com/prod/send',json={
-            "url":url,
-            "title":filename.split(".")[0],
-            "tags":tags
-        })
+        # requests.post(url='https://7sve4dxax3.execute-api.us-east-1.amazonaws.com/prod/send',json={
+        #     "url":url,
+        #     "title":filename.split(".")[0],
+        #     "tags":tags
+        # })
     
 if __name__ == '__main__':
     main()
