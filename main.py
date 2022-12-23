@@ -5,7 +5,7 @@ from videoDownloader import youtube_dl
 import os
 BASE_DIR=os.path.dirname(os.path.realpath(__file__))
 print(BASE_DIR)
-def create_video(tags,username):
+def create_video(tags,username=""):
     print("================Vidoe Downloaded================")
     try:
         import os
@@ -100,10 +100,10 @@ def pornhub_scrapper(html):
 def main():
     url=sys.argv[1]
     for index in range(1,1000):
-        url+="&page="+str(index)
+        url+=f"{index}/?o=all"
         print(url)
         res=requests.get(url=url)
         html=str(res.text)
-        pornhub_scrapper(html)
+        scrape_spangbang(html)
     
 main()

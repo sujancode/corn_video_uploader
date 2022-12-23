@@ -54,7 +54,7 @@ def create_video(video_path,overlay_path,output_path):
     result.write_videofile(output_path,preset="veryfast")
     return True
 
-def main(mp4Path,tags,username):
+def main(mp4Path,tags,username=""):
     filename=mp4Path.split("/")[-1]
     filename=sanitize(filename)
     result=create_video(mp4Path,f'{BASE_DIR}/video/overlay.mp4',f'{BASE_DIR}/tmp/{filename}')
@@ -76,11 +76,11 @@ def main(mp4Path,tags,username):
             "username":username
         })
 
-        # requests.post(url='https://7sve4dxax3.execute-api.us-east-1.amazonaws.com/prod/send',json={
-        #     "url":url,
-        #     "title":filename.split(".")[0],
-        #     "tags":tags
-        # })
+        requests.post(url='https://7sve4dxax3.execute-api.us-east-1.amazonaws.com/prod/send',json={
+            "url":url,
+            "title":filename.split(".")[0],
+            "tags":tags
+        })
     
 if __name__ == '__main__':
     main()
