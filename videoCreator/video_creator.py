@@ -79,7 +79,8 @@ def main(mp4Path,tags,username=""):
         requests.post(url='https://7sve4dxax3.execute-api.us-east-1.amazonaws.com/prod/send',json={
             "url":url,
             "title":filename.split(".")[0],
-            "tags":tags
+            "tags":tags,
+            "username":""
         })
     
 if __name__ == '__main__':

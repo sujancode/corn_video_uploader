@@ -61,7 +61,7 @@ def scrape_spangbang(html):
                 print(f"Error with url {e}")
             print(tags)
             create_video(tags)    
-
+   
 def pornhub_scrapper(html):
     soup=BeautifulSoup(html,'html.parser')
     for item in soup.find_all("div",attrs={"class":"thumbnail-info-wrapper"}):
@@ -96,6 +96,19 @@ def pornhub_scrapper(html):
             except Exception as e:
                 print(e)    
 
+def scrape_xvideos():
+    
+    url=f"https://www.xvideos.com/video23840010/grade_a_ass_with_dani_daniels"
+    ydl_opts = {
+        'format': 'best',
+        'outtmpl': f'{BASE_DIR}/data/pornhub/temp.mp4',
+        'nooverwrites': True,
+        'no_warnings': False,
+        'ignoreerrors': True,
+    }
+    print(url)
+    with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+        ydl.download([url])  
 
 def main():
     url=sys.argv[1]
@@ -106,4 +119,4 @@ def main():
         html=str(res.text)
         scrape_spangbang(html)
     
-main()
+scrape_xvideos()
