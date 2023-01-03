@@ -16,6 +16,7 @@ def create_video(tags,username=""):
             print(folder)
             folder_name=folder[1][0]
             break
+        
         mp4=glob.glob(f'{BASE_DIR}/data/{folder_name}/*.mp4')
         print(mp4)
         if(len(mp4)>0):
@@ -119,4 +120,4 @@ def main():
         html=str(res.text)
         scrape_spangbang(html)
     
-scrape_xvideos()
+main()
