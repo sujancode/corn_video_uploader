@@ -2,8 +2,15 @@ import os
 import time
 from selenium.webdriver.common.by import By
 from .speechToText import get_large_audio_transcription
+import random 
+import subprocess
 
-BASE_DIR="/tmp"
+BASE_DIR="./tmp"
+
+def get_list_countries():
+    with open('./location.txt',"r") as txt_file:
+        countries=txt_file.read().split(",")
+        return countries
 
 class CaptchaSolver:
     def __init__(self,browserWrapper,requests):
@@ -78,6 +85,12 @@ class CaptchaSolver:
                         driver.switch_to.default_content()
                         return True
             except Exception as e:
+                countries=get_list_countries()
+                vpn_index=random.randint(0,len(countries)-1)
+                coutry=countries[vpn_index]
+                
+                result=subprocess.run(["nordvpn","c",coutry])
+                print(result)
                 print(e)
                 print("Most Probably Change Proxies or Use Proxies")
         return False            

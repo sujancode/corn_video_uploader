@@ -27,12 +27,12 @@ def get_dimension(width,height):
 
 def create_video(video_path,overlay_path,output_path):
 
-    video = VideoFileClip(video_path,target_resolution=(720,1280))
+    video = VideoFileClip(video_path,target_resolution=(720,1080))
     
     # [width,height]=video.size
     # [width,height]=get_dimension(width,height)
 
-    overlay= VideoFileClip(overlay_path,has_mask=True,target_resolution=(720,int(1280/4)))
+    overlay= VideoFileClip(overlay_path,has_mask=True,target_resolution=(720,int(1080/3)))
     overlay=overlay.set_position(("right", "top"))
 
 

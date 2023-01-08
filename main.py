@@ -114,7 +114,7 @@ def scrape_xvideos():
 def main():
     url=sys.argv[1]
     for index in range(1,1000):
-        url+=f"{index}/?o=all"
+        url=f"{url}/{index}/?o=all"
         print(url)
         res=requests.get(url=url)
         html=str(res.text)
