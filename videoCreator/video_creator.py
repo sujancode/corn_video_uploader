@@ -47,10 +47,11 @@ def create_video(video_path,overlay_path,output_path):
     if video.duration > 60*7:
         video=video.subclip(0,60*7)
 
-    # watermark=ImageClip(f"{BASE_DIR}/video/title.png").set_start(60).set_duration(video.duration).resize(0.3)
-    # watermark=watermark.set_position(("left", "top"))
+    watermark=ImageClip(f"{BASE_DIR}/video/title.png").set_start(0).set_duration(video.duration).resize(0.3)
+    watermark=watermark.set_position(("left", "top"))
     home=CompositeVideoClip([clip,overlay])
-    # video=CompositeVideoClip([video,watermark])
+    video=CompositeVideoClip([video,watermark])
+    
     result=concatenate_videoclips([home,video])
 
     result.write_videofile(output_path,preset="veryfast")
